@@ -21,6 +21,28 @@ describe('Howl', function() {
 
         howl.play();
       });
+
+      describe('while howl is not yet loaded', function() {
+        it('does not postpone other queued commands', function(done) {
+          var howl = new Howl({
+            src: [fixtureAudioUrl()]
+          });
+
+          howl.play();
+          howl.pause();
+          howl.play();
+          howl.volume(0);
+
+          whenLoaded(howl, function() {
+            howl.volume(1);
+
+            setTimeout(function() {
+              expect(howl.volume()).to.eq(1);
+              done();
+            }, 100);
+          });
+        });
+      });
     });
 
     describe('#pause', function() {
@@ -36,6 +58,24 @@ describe('Howl', function() {
 
         howl.play();
         howl.pause();
+      });
+
+      describe('during play lock', function() {
+        it('is queued and performed asyncronously', function(done) {
+          var howl = new createHowl({
+            src: [fixtureAudioUrl()]
+          });
+
+          whenLoaded(howl, function() {
+            howl.play();
+            howl.pause();
+
+            setTimeout(function() {
+              expect(howl.playing()).to.eq(false);
+              done();
+            }, 100);
+          });
+        });
       });
     });
 
@@ -75,6 +115,24 @@ describe('Howl', function() {
         });
 
         howl.fade(0.2, 0.2, 100);
+      });
+
+      describe('while howl is not yet loaded', function() {
+        it('does not postpone other queued commands', function(done) {
+          var howl = new Howl({
+            src: [fixtureAudioUrl()]
+          });
+
+          howl.fade(0, 0.5, 500);
+          howl.volume(0);
+
+          whenLoaded(howl, function() {
+            howl.volume(1);
+
+            expect(howl.volume()).to.eq(1);
+            done();
+          });
+        });
       });
     });
 
