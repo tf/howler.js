@@ -1,6 +1,10 @@
 dist: trusty
 language: node_js
 
+# Use latest stable version of node
+node_js:
+  - "node"
+
 # User container based travis infrastructure which allows caching
 # features for open source projects.
 sudo: false
