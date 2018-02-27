@@ -12,6 +12,7 @@ module.exports = function(config) {
     },
 
     frameworks: ['mocha', 'chai'],
+    reporters: ['mocha'],
 
     files: [
       'src/howler.core.js',
