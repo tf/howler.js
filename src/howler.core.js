@@ -672,7 +672,7 @@
 
         // Makr this sounded as not ended in case another sound is played before this one loads.
         sound._ended = false;
-
+console.log('push play');
         // Add the sound to the queue to be played on load.
         var soundId = sound._id;
         self._queue.push({
@@ -684,6 +684,7 @@
 
         return soundId;
       }
+console.log('play');
 
       // Don't play the sound if an id was passed and it is already playing.
       if (id && !sound._paused) {
@@ -767,12 +768,14 @@
 
             // Support older browsers that don't support promises, and thus don't have this issue.
             if (typeof Promise !== 'undefined' && play instanceof Promise) {
+              console.log('promise');
               // Implements a lock to prevent DOMException: The play() request was interrupted by a call to pause().
               self._playLock = true;
 
               // Releases the lock and executes queued actions.
               var runLoadQueue = function() {
                 self._playLock = false;
+                console.log('promise res');
                 if (!internal) {
                   self._emit('play', sound._id);
                 }
@@ -839,6 +842,7 @@
 
       // If the sound hasn't loaded or a play() promise is pending, add it to the load queue to pause when capable.
       if (self._state !== 'loaded' || self._playLock) {
+        console.log('push pause');
         self._queue.push({
           event: 'pause',
           action: function() {
@@ -848,6 +852,7 @@
 
         return self;
       }
+      console.log('pause');
 
       // If no id is passed, get all ID's to be paused.
       var ids = self._getSoundIds(id);
@@ -1061,6 +1066,7 @@
       if (typeof vol !== 'undefined' && vol >= 0 && vol <= 1) {
         // If the sound hasn't loaded, add it to the load queue to change volume when capable.
         if (self._state !== 'loaded') {
+          console.log('push vol');
           self._queue.push({
             event: 'volume',
             action: function() {
@@ -1070,6 +1076,7 @@
 
           return self;
         }
+        console.log('vol', vol);
 
         // Set the group volume.
         if (typeof id === 'undefined') {
@@ -2111,7 +2118,9 @@
 
       if (parent._state !== 'loaded') {
         parent._state = 'loaded';
+        console.log('emit load')
         parent._emit('load');
+        console.log('load q')
         parent._loadQueue();
       }
 
