@@ -136,6 +136,47 @@ describe('Howl', function() {
       });
     });
 
+    describe('#volume', function() {
+      describe('while howl is not yet loaded', function() {
+        it('only emits a single volume event for multiple calls', function(done) {
+          var howl = new Howl({
+            src: [fixtureAudioUrl()]
+          });
+          var volumeListener = sinon.spy();
+
+          howl.on('volume', volumeListener);
+
+          howl.volume(0);
+          howl.volume(0.4);
+          howl.volume(1);
+
+          whenLoaded(howl, function() {
+            setTimeout(function() {
+              expect(volumeListener).to.have.been.calledOnce;
+              done();
+            }, 100);
+          });
+        });
+
+        it('supresses queued fades', function(done) {
+          var howl = new Howl({
+            src: [fixtureAudioUrl()]
+          });
+          var fadeListener = sinon.spy();
+
+          howl.on('fade', fadeListener);
+
+          howl.fade(0, 0.5, 500);
+          howl.volume(1);
+
+          howl.once('volume', function() {
+            expect(fadeListener).not.to.have.been.called;
+            done();
+          });
+        });
+      });
+    });
+
     function createHowl(options) {
       return new Howl(Object.assign({}, options, defaultOptions));
     }

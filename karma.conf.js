@@ -11,7 +11,7 @@ module.exports = function(config) {
       }
     },
 
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha', 'chai', 'sinon-chai'],
     reporters: ['spec'],
 
     files: [
