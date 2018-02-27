@@ -7,11 +7,12 @@ describe('Howl', function() {
       src: [fixtureAudioUrl]
     });
 
-    sound.play();
-
     sound.once('play', function() {
       expect(sound.playing()).to.eq(true);
+      done();
     });
+
+    sound.play();
   });
 
   it('calling pause during play lock is not lost', function(done) {
